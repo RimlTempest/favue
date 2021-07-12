@@ -1,16 +1,16 @@
 ---
-name: 機能追加のissueTemplate
-about: どんな機能をリクエストするか
+name: バグ修正のissueTemplate
+about: どんなバグか
 title: ''
-labels: ''
+labels: bug
 assignees: ''
 
 ---
 
 # タスク
-タスク内容
+バグの詳細
 
 ## タスク達成条件
 上記の条件を実装する。
-githubへ`feature/`というブランチでpushする。
+githubへ`fix/`というブランチでpushする。
 コードレビューを行いマージされたタイミングで達成
