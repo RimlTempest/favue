@@ -1,0 +1,28 @@
+# fastApiを使用するために必要なlib
+fastapi==0.63.0
+uvicorn==0.13.3
+## データ検証用
+pydantic==1.7.3
+
+## DBにposgreを使う（Herokuとか）
+databases[postgresql]==0.4.1
+
+## PythonのORM
+SQLAlchemy==1.3.22
+
+## DBのマイグレーションに使用
+alembic==1.5.2
+psycopg2==2.8.6
+
+# TEST関係
+pytest==6.2.2
+pytest-asyncio==0.14.0
+
+## エンドポイントをテストするための非同期リクエストクライアント
+httpx==0.16.1
+
+## asgi-lifespan ASGIサーバー(uvicorn)を起動せずに非同期アプリケーションをテスト可能にする
+asgi-lifespan==1.0.1
+
+## pythonのDocker SDK
+docker==4.4.3
