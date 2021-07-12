@@ -4,24 +4,36 @@ fastAPI + Vue + Dockerのサンプル
 
 ## 立ち上げ方
 
+backend直下に`.env`ファイルを作成し
+```env
+SECRET_KEY=IT_MUST_BE_CHANGED
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_SERVER=db
+POSTGRES_PORT=5432
+POSTGRES_DB=postgres
+```
+
+のようにDB情報を記述する
+
 ### サーバ側
 
-ビルド＆up
+ビルド＆up  
 `docker-compose up -d --build`
 
-停める
+停める  
 `docker-compose down`
 
-立ち上がってるコンテナ確認
+立ち上がってるコンテナ確認  
 `docker ps`
 
-#### マイグレーション
-`docker exec -it favue_server_1 /bin/sh`
+#### マイグレーション  
+`docker exec -it favue_server_1 /bin/sh`  
 ※ favue_server_1の部分は`docker ps`で確認したserverの名前
 
-スクリプトファイル（script.py.mako）からマイグレートファイルを作成
-`alembic revision -m "create_first_tables"`
-※1 create_first_tablesは好きな文字列でおｋ
+スクリプトファイル（script.py.mako）からマイグレートファイルを作成  
+`alembic revision -m "create_first_tables"`  
+※1 create_first_tablesは好きな文字列でおｋ  
 ※2 コマンドがコピペできないかもしれないので手打ちがんばろう！
 
 `backend/app/db/migrations/versions`に生成されている。
@@ -96,17 +108,17 @@ def downgrade() -> None:
     op.execute("DROP FUNCTION update_updated_at_column")
 ```
 
-生成したファイルをマイグレートする
+生成したファイルをマイグレートする  
 `alembic upgrade head`
 
-※ 作り直した際
-`FAILED: Can't locate revision identified by '29951ce35180'`
+※ 作り直した際  
+`FAILED: Can't locate revision identified by '29951ce35180'`  
 のようなエラーが出る場合はリビジョンテーブルにデータが残ってないか確認する
 
-こちらでposgreのコンテナに入る
-`docker-compose exec db psql -h localhost -U postgres --dbname=postgres`
+こちらでposgreのコンテナに入る  
+`docker-compose exec db psql -h localhost -U postgres --dbname=postgres`  
 
-確認
+確認  
 `SELECT * FROM alembic_version`
 
 ```Text
@@ -117,27 +129,26 @@ def downgrade() -> None:
 +-------------+
 ```
 
-このように残ってたらDropする
-
-`DROP TABLE alembic_version;`
+このように残ってたらDropする  
+`DROP TABLE alembic_version;`  
 
 もう一度Select文で確認してしっかりDropできていればalembic upgradeをする
 
-成功したら作成したテーブルを確認する
-`\d holo_member`
+成功したら作成したテーブルを確認する  
+`\d holo_member`  
 
 ※ holo_memberは作ったテーブル名で
 
 #### 実行
 
-Imageビルド
-`docker-compose build`
+Imageビルド  
+`docker-compose build`  
 
-コンテナの起動
-`docker-compose up -d`
+コンテナの起動  
+`docker-compose up -d`  
 
-build & upを行う
-`docker-compose up -d --build`
+build & upを行う  
+`docker-compose up -d --build`  
 
-テストの実行
-`docker-compose exec server pytest -vv`
+テストの実行  
+`docker-compose exec server pytest -vv`  
