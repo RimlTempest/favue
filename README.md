@@ -1,6 +1,6 @@
 # favue
 
-fastAPI + Vue + Dockerのサンプル  
+fastAPI + Vue + Dockerの勉強用サンプル  
 
 ## 立ち上げ方
 
