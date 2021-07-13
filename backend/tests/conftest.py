@@ -23,17 +23,17 @@ config = Config("alembic.ini")
 @pytest.fixture(scope="session")
 def docker() -> pydocker.APIClient:
     # base url is the unix socket we use to communicate with docker
-    return pydocker.APIClient(base_url="unix://var/run/docker.sock", version="auto")
+    return pydocker.APIClient(
+        base_url="unix://var/run/docker.sock",
+        version="auto"
+    )
 
 # テストで使用するPostgreSQLコンテナを立ち上げるフィクスチャ
 # autouse=True をデコレータで指定することでテストに対して前後処理として追加することができる
+
+
 @pytest.fixture(scope="session", autouse=True)
 def postgres_container(docker: pydocker.APIClient) -> None:
-    """
-    Use docker to spin up a postgres container for the duration of the testing session.
-    Kill it as soon as all tests are run.
-    DB actions persist across the entirety of the testing session.
-    """
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     image = "postgres:12.1-alpine"
@@ -59,12 +59,13 @@ def postgres_container(docker: pydocker.APIClient) -> None:
         networking_config=networking_config
     )
 
-    # FastAPIコンテナが稼働しているネットワーク上にDocker SDKを使用して新しいPostgreSQLコンテナを立ち上げ、上述した接続確認を行ってからDSNを CONTAINER_DSN という環境変数にセット
+    # FastAPIコンテナが稼働しているネットワーク上にDocker SDKを使用して
+    # 新しいPostgreSQLコンテナを立ち上げ、上述した接続確認を行ってからDSNを CONTAINER_DSN という環境変数にセット
     docker.start(container=container["Id"])
 
     inspection = docker.inspect_container(container["Id"])
-    ip_address = inspection['NetworkSettings']['Networks'][network]['IPAddress']
-    dsn = f"postgresql://postgres:postgres@{ip_address}/postgres"
+    ip_addr = inspection['NetworkSettings']['Networks'][network]['IPAddress']
+    dsn = f"postgresql://postgres:postgres@{ip_addr}/postgres"
 
     try:
         ping_postgres(dsn)
@@ -88,7 +89,8 @@ def db(app: FastAPI) -> Database:
     return app.state._db
 
 
-# 実行中のアプリケーションにリクエストを送信できる、クリーンなテストクライアントを用意するために LifespanManager と AsyncClient を使用
+# 実行中のアプリケーションにリクエストを送信できる、
+# クリーンなテストクライアントを用意するために LifespanManager と AsyncClient を使用
 @pytest.fixture
 async def client(app: FastAPI) -> AsyncClient:
     async with LifespanManager(app):
@@ -98,6 +100,7 @@ async def client(app: FastAPI) -> AsyncClient:
             headers={"Content-Type": "application/json"}
         ) as client:
             yield client
+
 
 @pytest.fixture
 async def test_holo_member(db: Database) -> HoloMemberInDB:
@@ -109,4 +112,6 @@ async def test_holo_member(db: Database) -> HoloMemberInDB:
         type="3",
         twitter="fake"
     )
-    return await holo_member_repo.create_holo_member(new_holo_member=new_holo_member)
+    return await holo_member_repo.create_holo_member(
+        new_holo_member=new_holo_member
+    )

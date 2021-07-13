@@ -4,19 +4,20 @@ from httpx import AsyncClient
 from typing import List
 
 from app.models.holo_member import (
-    HoloMemberCreate, 
+    HoloMemberCreate,
     HoloMemberInDB
 )
 
 from starlette.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
-    HTTP_404_NOT_FOUND, 
+    HTTP_404_NOT_FOUND,
     HTTP_422_UNPROCESSABLE_ENTITY,
 )
 
 # これを定義することによって@pytest.mark.asyncioとデコレータを定義しなくてよくなる
 pytestmark = pytest.mark.asyncio
+
 
 @pytest.fixture
 def new_holo_member():
@@ -29,6 +30,8 @@ def new_holo_member():
     )
 
 # Routing Test
+
+
 class TestHoloMemberRoutes:
     # デコレータを付与することで非同期にテストを処理
     # app と clientはconftest.pyファイルで定義したフィクスチャ
@@ -58,9 +61,11 @@ class TestHoloMemberRoutes:
         assert res.status_code == HTTP_422_UNPROCESSABLE_ENTITY
 
 # Create Test
+
+
 class TestCreateHoloMember:
     async def test_valid_input_creates_holo_member(
-        self, 
+        self,
         app: FastAPI,
         client: AsyncClient,
         new_holo_member: HoloMemberCreate
@@ -72,7 +77,7 @@ class TestCreateHoloMember:
         assert res.status_code == HTTP_201_CREATED
         created_holo_member = HoloMemberCreate(**res.json())
         assert created_holo_member == new_holo_member
-    
+
     @pytest.mark.parametrize(
         "invalid_payload, status_code",
         (
@@ -97,6 +102,8 @@ class TestCreateHoloMember:
         assert res.status_code == status_code
 
 # Get Test
+
+
 class TestGetHoloMember:
     async def test_get_holo_member_by_id(
         self,
@@ -111,7 +118,7 @@ class TestGetHoloMember:
         assert res.status_code == HTTP_200_OK
         holo_member = HoloMemberInDB(**res.json())
         assert holo_member == test_holo_member
-    
+
     @pytest.mark.parametrize(
         "id, status_code",
         (
@@ -121,24 +128,24 @@ class TestGetHoloMember:
         ),
     )
     async def test_wrong_id_returns_error(
-        self, 
-        app: FastAPI, 
-        client: AsyncClient, 
-        id: int, 
+        self,
+        app: FastAPI,
+        client: AsyncClient,
+        id: int,
         status_code: int
     ) -> None:
         res = await client.get(
             app.url_path_for(
-                "holo_member:get-holo_member-by-id", 
+                "holo_member:get-holo_member-by-id",
                 id=id
             )
         )
         assert res.status_code == status_code
 
     async def test_get_all_holo_member_returns_valid_response(
-        self, 
-        app: FastAPI, 
-        client: AsyncClient, 
+        self,
+        app: FastAPI,
+        client: AsyncClient,
         test_holo_member: HoloMemberInDB
     ) -> None:
         res = await client.get(
@@ -154,8 +161,11 @@ class TestGetHoloMember:
 
 # FIXME: Updateのテストが通るように修正
 # Update Test
+
+
 class TestUpdateHoloMember:
-    @pytest.mark.parametrize('attrs_to_change, values',
+    @pytest.mark.parametrize(
+        'attrs_to_change, values',
         (
             (
                 ['type'],
@@ -179,14 +189,16 @@ class TestUpdateHoloMember:
             ),
             (
                 ['name', 'description'],
-                [  
+                [
                     'extra new fake holo_member name',
                     'extra new fake holo_member description'
                 ]
             ),
             (
-                ['type', 'name', 'description', 'age', 'twitter'],
-                ['3', 'test', 'testttttttt', 2.00, 'https://aaa']
+                ['type', 'name', 'description',
+                    'age', 'twitter'],
+                ['3', 'test', 'testttttttt',
+                    2.00, 'https://aaa']
             ),
         ),
     )
@@ -207,7 +219,7 @@ class TestUpdateHoloMember:
         }
         res = await client.put(
             app.url_path_for(
-                'holo_member:update-holo_member-by-id', 
+                'holo_member:update-holo_member-by-id',
                 id=test_holo_member.id
             ),
             json=holo_member_update
@@ -220,12 +232,12 @@ class TestUpdateHoloMember:
             assert getattr(
                 updated_holo_member,
                 attrs_to_change[i]
-                ) != getattr(
-                    test_holo_member,
-                    attrs_to_change[i]
-                )
+            ) != getattr(
+                test_holo_member,
+                attrs_to_change[i]
+            )
             assert getattr(
-                updated_holo_member, 
+                updated_holo_member,
                 attrs_to_change[i]
             ) == values[i]
 
@@ -262,16 +274,18 @@ class TestUpdateHoloMember:
         assert res.status_code == status_code
 
 # Delete Test
+
+
 class TestDeleteHoloMember:
     async def test_can_delete_holo_member_successfully(
-        self, 
-        app: FastAPI, 
-        client: AsyncClient, 
+        self,
+        app: FastAPI,
+        client: AsyncClient,
         test_holo_member: HoloMemberInDB
     ) -> None:
         res = await client.delete(
             app.url_path_for(
-                'holo_member:delete-holo_member-by-id', 
+                'holo_member:delete-holo_member-by-id',
                 id=test_holo_member.id
             )
         )
@@ -279,7 +293,7 @@ class TestDeleteHoloMember:
 
         res = await client.get(
             app.url_path_for(
-                'holo_member:get-holo_member-by-id', 
+                'holo_member:get-holo_member-by-id',
                 id=test_holo_member.id
             )
         )
@@ -303,7 +317,7 @@ class TestDeleteHoloMember:
     ) -> None:
         res = await client.delete(
             app.url_path_for(
-                'holo_member:delete-holo_member-by-id', 
+                'holo_member:delete-holo_member-by-id',
                 id=id
             )
         )

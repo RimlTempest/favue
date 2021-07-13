@@ -6,6 +6,7 @@ from app.core.config import DATABASE_URL
 
 logger = logging.getLogger(__name__)
 
+
 async def connect_to_db(app: FastAPI) -> None:
     CONTAINER_DSN = os.environ.get('CONTAINER_DSN', '')
     DB_URL = CONTAINER_DSN if CONTAINER_DSN else DATABASE_URL

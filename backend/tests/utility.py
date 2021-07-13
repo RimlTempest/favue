@@ -6,9 +6,11 @@ import psycopg2
 
 # PostgreSQLとの接続が確率されるまで待機する
 # 最後まで確率できなかった際は例外をスロー
+
+
 def do_with_retry(
-    catching_exc: Type[Exception], 
-    reraised_exc: Type[Exception], 
+    catching_exc: Type[Exception],
+    reraised_exc: Type[Exception],
     error_msg: str
 ) -> Callable:  # pragma: no cover
     def outer_wrapper(call: Callable) -> Callable:

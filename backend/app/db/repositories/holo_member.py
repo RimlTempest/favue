@@ -1,6 +1,10 @@
 from typing import List
 from app.db.repositories.base import BaseRepository
-from app.models.holo_member import HoloMemberCreate, HoloMemberInDB, HoloMemberUpdate
+from app.models.holo_member import (
+    HoloMemberCreate,
+    HoloMemberInDB,
+    HoloMemberUpdate
+)
 from fastapi import HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST
 import app.db.repositories.queries.holo_member as query
@@ -9,7 +13,11 @@ import app.db.repositories.queries.holo_member as query
 class HoloMemberRepository(BaseRepository):
 
     # 作成
-    async def create_holo_member(self, *, new_holo_member: HoloMemberCreate) -> HoloMemberInDB:
+    async def create_holo_member(
+        self,
+        *,
+        new_holo_member: HoloMemberCreate
+    ) -> HoloMemberInDB:
         query_values = new_holo_member.dict()
         holo_member = await self.db.fetch_one(
             query=query.CREATE_HOLO_MEMBER_QUERY,
@@ -29,7 +37,7 @@ class HoloMemberRepository(BaseRepository):
             return None
 
         return HoloMemberInDB(**holo_member)
-    
+
     # 全取得
     async def get_all_holo_member(self) -> List[HoloMemberInDB]:
         holo_member_records = await self.db.fetch_all(
@@ -45,7 +53,7 @@ class HoloMemberRepository(BaseRepository):
 
         if not holo_member:
             return None
-        
+
         holo_member_update_params = holo_member.copy(
             update=holo_member_update.dict(exclude_unset=True)
         )
