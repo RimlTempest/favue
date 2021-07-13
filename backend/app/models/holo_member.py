@@ -16,6 +16,8 @@ class GenerationType(str, Enum):
     _Gamers = "Gamers"
 
 # 全リソースで共有する属性
+
+
 class HoloMemberBase(CoreModel):
     type: Optional[GenerationType]
     name: Optional[str]
@@ -24,15 +26,21 @@ class HoloMemberBase(CoreModel):
     twitter: Optional[str]
 
 # 新しいリソースを作成する際に必須の属性
+
+
 class HoloMemberCreate(HoloMemberBase):
     name: str
     type: GenerationType
 
 # 更新することが可能な属性
+
+
 class HoloMemberUpdate(HoloMemberBase):
     type: GenerationType
 
 # データベースから取得するリソースに存在する属性
+
+
 class HoloMemberInDB(IDModelMixin, HoloMemberBase):
     type: GenerationType
     name: str
@@ -41,5 +49,7 @@ class HoloMemberInDB(IDModelMixin, HoloMemberBase):
     twitter: str
 
 # GET, POST, PUTリクエストで返されるデータに存在する属性
+
+
 class HoloMemberPublic(IDModelMixin, HoloMemberBase):
     pass

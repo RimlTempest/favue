@@ -1,3 +1,6 @@
+from sqlalchemy import engine_from_config, pool
+import alembic
+from app.core.config import DATABASE_URL
 import logging
 import os
 import pathlib
@@ -5,14 +8,11 @@ import sys
 from logging.config import fileConfig
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
-from app.core.config import DATABASE_URL
-
-import alembic
-from sqlalchemy import engine_from_config, pool
 
 config = alembic.context.config
 fileConfig(config.config_file_name)
 logger = logging.getLogger("alembic.env")
+
 
 def run_migrations_online() -> None:
     CONTAINER_DSN = os.environ.get('CONTAINER_DSN', '')

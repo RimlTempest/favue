@@ -1,7 +1,7 @@
 """create_first_tables
 
 Revision ID: 9527b55844ae
-Revises: 
+Revises:
 Create Date: 2021-07-12 17:21:09.168031
 
 """
@@ -9,7 +9,6 @@ Create Date: 2021-07-12 17:21:09.168031
 from typing import Tuple
 from alembic import op
 import sqlalchemy as sa
-
 
 
 # revision identifiers, used by Alembic
@@ -35,6 +34,8 @@ def create_updated_at_trigger() -> None:
     )
 
 # timestampsのモデル
+
+
 def timestamps(indexed: bool = False) -> Tuple[sa.Column, sa.Column]:
     return (
         sa.Column(
@@ -74,6 +75,7 @@ def create_holo_member_table() -> None:
         EXECUTE PROCEDURE update_updated_at_column();
         """
     )
+
 
 def upgrade() -> None:
     create_updated_at_trigger()
