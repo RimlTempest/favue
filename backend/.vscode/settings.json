@@ -17,7 +17,7 @@
     ],
 
     "python.formatting.autopep8Args": [
-        "--max-line-length", "88",
+        "--max-line-length", "100",
         "--experimental",
         "--aggressive",
         "--aggressive",
