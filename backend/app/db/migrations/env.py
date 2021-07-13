@@ -1,13 +1,14 @@
-from sqlalchemy import engine_from_config, pool
-import alembic
-from app.core.config import DATABASE_URL
 import logging
 import os
 import pathlib
 import sys
 from logging.config import fileConfig
 
+import alembic
+from sqlalchemy import engine_from_config, pool
+
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
+from app.core.config import DATABASE_URL  # noqa
 
 config = alembic.context.config
 fileConfig(config.config_file_name)
