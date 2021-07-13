@@ -11,6 +11,18 @@ import app.db.repositories.queries.holo_member as query
 
 
 class HoloMemberRepository(BaseRepository):
+    """HoloMemberRepository
+
+    HoloMemberのRepository\n
+    基本的な操作を司るクラス
+
+    Attributes:
+        create_holo_member HoloMemberInDB: ライバーの新規作成
+        get_holo_member_by_id HoloMemberInDB: ライバーをIDを元に取得
+        get_all_holo_member List[HoloMemberInDB]: 登録されているライバーを全取得
+        update_holo_member HoloMemberInDB: ライバーをIDを元に更新
+        delete_holo_member_by_id int: ライバーをIDを元に削除
+    """
 
     # 作成
     async def create_holo_member(
